@@ -26,7 +26,7 @@ class TeacherUpdateRequest(BaseModel):
     phone: str | None = None
 
 
-class TeacherChangePassword(BaseModel):
+class TeacherChangePasswordRequest(BaseModel):
     old_password: str = Field(..., min_length=8)
     new_password: str = Field(..., min_length=8)
     confirmed_password: str = Field(..., min_length=8)
