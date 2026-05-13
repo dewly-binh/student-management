@@ -17,9 +17,10 @@ class StudentResponse(BaseModel):
     status: StudentStatusEnum
     created_at: datetime
 
-class StudentSummaryResponse(BaseModel): 
-    id: str 
-    full_name: str 
-    student_code: str 
-    email: str 
+
+class StudentSummaryResponse(BaseModel):
+    id: str
+    full_name: str
+    student_code: str
+    email: str
     status: StudentStatusEnum
