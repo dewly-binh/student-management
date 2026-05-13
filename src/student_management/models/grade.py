@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class Grade(Document):
-    enrollment_id: Link["Enrollment"] = Field(...)
+    enrollment: Link["Enrollment"] = Field(...)
     midterm: float | None = Field(default=None, ge=0, le=10)
     final: float | None = Field(default=None, ge=0, le=10)
     graded_by: Link["Teacher"] | None = None
@@ -25,5 +25,5 @@ class Grade(Document):
         return round(self.midterm * 0.4 + self.final * 0.6, 2)
 
     class Settings:
-        name = "enrollments"
-        indexes = [IndexModel([("enrollment_id", pymongo.ASCENDING)], unique=True)]
+        name = "grades"
+        indexes = [IndexModel([("enrollment", pymongo.ASCENDING)], unique=True)]

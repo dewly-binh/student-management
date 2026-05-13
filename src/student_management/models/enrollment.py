@@ -19,19 +19,19 @@ class EnrollmentStatusEnum(str, Enum):
 
 
 class Enrollment(Document):
-    student_id: Link["Student"] = Field(...)
-    course_id: Link["Course"] = Field(...)
+    student: Link["Student"] = Field(...)
+    course: Link["Course"] = Field(...)
     semester: str = Field(..., pattern=r"^\d{4}-(1|2|3)$")  # 2024-1: <năm học> - <kỳ>
     enrolled_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    status: EnrollmentStatusEnum = Field(default=EnrollmentStatusEnum.DROPPED)
+    status: EnrollmentStatusEnum = Field(default=EnrollmentStatusEnum.ENROLLED)
 
     class Settings:
         name = "enrollments"
         indexes = [
             IndexModel(
                 [
-                    ("student_id", pymongo.ASCENDING),
-                    ("course_id", pymongo.ASCENDING),
+                    ("student", pymongo.ASCENDING),
+                    ("course", pymongo.ASCENDING),
                     ("semester", pymongo.ASCENDING),
                 ],
                 unique=True,

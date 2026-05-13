@@ -3,13 +3,11 @@ from datetime import datetime
 from pydantic import BaseModel, computed_field
 
 
-class GradeResponse(BaseModel):
+class GradeBase(BaseModel):
     id: str
     enrollment_id: str
     midterm: float | None = None
     final: float | None = None
-    graded_by: str | None = None
-    graded_at: datetime
 
     @computed_field
     @property
@@ -19,9 +17,10 @@ class GradeResponse(BaseModel):
         return round(self.midterm * 0.4 + self.final * 0.6, 2)
 
 
-class GradeSummaryResponse(BaseModel):
-    id: str
-    enrollment_id: str
-    midterm: float | None = None
-    final: float | None = None
-    gpa: float | None = None
+class GradeResponse(GradeBase):
+    graded_by: str | None = None
+    graded_at: datetime
+
+
+class GradeSummaryResponse(GradeBase):
+    pass

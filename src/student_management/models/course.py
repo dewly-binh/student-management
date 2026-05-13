@@ -20,7 +20,7 @@ class Course(Document):
     name: str = Field(...)
     credits: int = Field(..., ge=1, le=5)
     description: str | None = None
-    teacher_id: Link["Teacher"] | None = None
+    teacher: Link["Teacher"] | None = None
     status: CourseStatusEnum = Field(default=CourseStatusEnum.ACTIVE)
 
     class Settings:
