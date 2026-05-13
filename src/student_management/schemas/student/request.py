@@ -27,7 +27,7 @@ class StudentCreateRequest(BaseModel):
 
 
 class StudentUpdateRequest(BaseModel):
-    fullname: str | None = None
+    full_name: str | None = None
     date_of_birth: date | None = None
     gender: GenderEnum | None = None
     phone: str | None = Field(default=None, pattern=r"^(0|\+84)[3|5|7|8|9]\d{8}$")

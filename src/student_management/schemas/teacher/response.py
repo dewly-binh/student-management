@@ -15,7 +15,7 @@ class TeacherResponse(BaseModel):
 
 class TeacherSummaryResponse(BaseModel):
     id: str
-    ful_name: str
+    full_name: str
     teacher_code: str
     email: str
     status: Status

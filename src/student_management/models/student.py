@@ -34,6 +34,9 @@ class Student(Document):
     @field_validator("date_of_birth")
     @classmethod
     def validate_date_of_birth(cls, v):
+        if v is None:
+            return v
+
         today = date.today()
         if v > today:
             raise ValueError("Ngày sinh không hợp lệ")
