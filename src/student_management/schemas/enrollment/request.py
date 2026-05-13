@@ -7,7 +7,7 @@ from student_management.models.enrollment import EnrollmentStatusEnum
 class EnrollmentCreateRequest(BaseModel):
     student_id: ObjectId
     course_id: ObjectId
-    semenster: str = Field(
+    semester: str = Field(
         ...,
         pattern=r"^\d{4}-(1|2|3)$",
         examples=["2024-1"],
