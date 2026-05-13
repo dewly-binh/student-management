@@ -19,8 +19,8 @@ class EnrollmentStatusEnum(str, Enum):
 
 
 class Enrollment(Document):
-    student_id: Link[Student] = Field(...)
-    course_id: Link[Course] = Field(...)
+    student_id: Link["Student"] = Field(...)
+    course_id: Link["Course"] = Field(...)
     semester: str = Field(..., pattern=r"^\d{4}-(1|2|3)$")  # 2024-1: <năm học> - <kỳ>
     enrolled_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: EnrollmentStatusEnum = Field(default=EnrollmentStatusEnum.DROPPED)
