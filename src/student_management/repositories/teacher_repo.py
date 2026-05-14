@@ -1,10 +1,11 @@
+from student_management.core.security import hash_password
 from student_management.models.teacher import Teacher
 from student_management.schemas.teacher.request import TeacherCreateRequest
 
 
 class TeacherRepository:
     async def create(self, teacher: TeacherCreateRequest) -> Teacher:
-        password_hash = teacher.password
+        password_hash = hash_password(teacher.password)
         tch = Teacher(
             full_name=teacher.full_name,
             email=teacher.email,
@@ -44,10 +45,10 @@ class TeacherRepository:
 
         return True
 
-    async def update_password(self, teacher_id: str, password_hash: str) -> bool:
+    async def update_password(self, teacher_id: str, password: str) -> bool:
         tch = await self.get_by_id(teacher_id)
         if tch is None:
             return False
         
-        await tch.set({Teacher.password_hash: password_hash})
+        await tch.set({Teacher.password_hash: hash_password(password)})
         return True

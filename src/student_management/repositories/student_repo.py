@@ -1,10 +1,11 @@
 from student_management.models.student import Student
+from student_management.core.security import hash_password
 from student_management.schemas.student.request import StudentCreateRequest
 
 
 class StudentRepository:
     async def create(self, student: StudentCreateRequest) -> Student:
-        password_hash = student.password
+        password_hash = hash_password(student.password)
 
         sv = Student(
             full_name=student.full_name,
@@ -46,10 +47,10 @@ class StudentRepository:
         await sv.delete()
         return True
 
-    async def update_password(self, student_id: str, password_hash: str) -> bool:
+    async def update_password(self, student_id: str, password: str) -> bool:
         student = await self.get_by_id(student_id)
         if student is None:
             return False
 
-        await student.set({Student.password_hash: password_hash})
+        await student.set({Student.password_hash: hash_password(password)})
         return True
