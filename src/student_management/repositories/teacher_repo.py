@@ -1,11 +1,12 @@
-from student_management.core.security import hash_password
+from student_management.db.mongo_types import parse_object_id
 from student_management.models.teacher import Teacher
 from student_management.schemas.teacher.request import TeacherCreateRequest
 
 
 class TeacherRepository:
-    async def create(self, teacher: TeacherCreateRequest) -> Teacher:
-        password_hash = hash_password(teacher.password)
+    async def create(
+        self, teacher: TeacherCreateRequest, password_hash: str
+    ) -> Teacher:
         tch = Teacher(
             full_name=teacher.full_name,
             email=teacher.email,
@@ -30,11 +31,21 @@ class TeacherRepository:
         return await Teacher.find_all().to_list()
 
     async def update(self, teacher_id: str, update_data: dict) -> Teacher | None:
-        tch = await self.get_by_id(teacher_id)
-        if tch is None:
+        object_id = parse_object_id(teacher_id)
+        if object_id is None:
             return None
-        await tch.set(update_data)
-        return tch
+
+        # Bypass Beanie.get() here so an invalid old document can still be fixed.
+        # Request validation must happen before this direct Mongo update.
+        result = await Teacher.get_pymongo_collection().update_one(
+            {"_id": object_id},
+            {"$set": update_data},
+        )
+
+        if result.matched_count == 0:
+            return None
+
+        return await self.get_by_id(teacher_id)
 
     async def delete(self, teacher_id: str) -> bool:
         tch = await self.get_by_id(teacher_id)
@@ -45,10 +56,10 @@ class TeacherRepository:
 
         return True
 
-    async def update_password(self, teacher_id: str, password: str) -> bool:
+    async def update_password(self, teacher_id: str, password_hash: str) -> bool:
         tch = await self.get_by_id(teacher_id)
         if tch is None:
             return False
-        
-        await tch.set({Teacher.password_hash: hash_password(password)})
+
+        await tch.set({Teacher.password_hash: password_hash})
         return True

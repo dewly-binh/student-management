@@ -1,11 +1,15 @@
 from typing import cast
 
-from beanie import Link
+from beanie import Link, PydanticObjectId
 
 from student_management.models.enrollment import Enrollment
 from student_management.models.grade import Grade
 from student_management.models.teacher import Teacher
 from student_management.schemas.grade.request import GradeCreateRequest
+
+_MISSING = object()
+
+Grade.model_rebuild()
 
 
 class GradeRepository:
@@ -42,12 +46,28 @@ class GradeRepository:
             return None
 
         # Query Link fields with the linked document so Beanie builds the correct DBRef.
-        return await Grade.find_one(Grade.enrollment == enrollment)
+        return await Grade.find_one(
+            Grade.enrollment.id == PydanticObjectId(enrollment.id)
+        )
 
     async def update(self, grade_id: str, update_data: dict) -> Grade | None:
         grade = await self.get_by_id(grade_id)
         if grade is None:
             return None
+
+        update_data = update_data.copy()
+
+        graded_by = update_data.pop("graded_by", _MISSING)
+
+        if graded_by is not _MISSING:
+            if graded_by is None:
+                update_data["graded_by"] = None
+            else:
+                teacher = await Teacher.get(str(graded_by))
+                if teacher is None:
+                    raise ValueError("Teacher not found")
+
+                update_data["graded_by"] = teacher
 
         await grade.set(update_data)
         return grade

@@ -6,8 +6,9 @@ from student_management.models.course import Course
 from student_management.models.teacher import Teacher
 from student_management.schemas.course.request import CourseCreateRequest
 
-
 _MISSING = object()
+
+Course.model_rebuild()
 
 
 class CourseRepository:

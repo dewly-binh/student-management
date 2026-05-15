@@ -37,6 +37,9 @@ class Student(Document):
         if v is None:
             return v
 
+        if isinstance(v, datetime):
+            v = v.date()
+
         today = date.today()
         if v > today:
             raise ValueError("Ngày sinh không hợp lệ")

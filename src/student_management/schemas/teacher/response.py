@@ -1,10 +1,11 @@
 from pydantic import BaseModel
 
 from student_management.models.teacher import Status
+from student_management.schemas.object_id import PyObjectId
 
 
 class TeacherResponse(BaseModel):
-    id: str
+    id: PyObjectId
     full_name: str
     email: str
     teacher_code: str
@@ -14,7 +15,7 @@ class TeacherResponse(BaseModel):
 
 
 class TeacherSummaryResponse(BaseModel):
-    id: str
+    id: PyObjectId
     full_name: str
     teacher_code: str
     email: str

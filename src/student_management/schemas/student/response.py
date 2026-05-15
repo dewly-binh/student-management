@@ -3,10 +3,11 @@ from datetime import date, datetime
 from pydantic import BaseModel
 
 from student_management.models.student import GenderEnum, StudentStatusEnum
+from student_management.schemas.object_id import PyObjectId
 
 
 class StudentResponse(BaseModel):
-    id: str
+    id: PyObjectId
     full_name: str
     email: str
     student_code: str
@@ -19,7 +20,7 @@ class StudentResponse(BaseModel):
 
 
 class StudentSummaryResponse(BaseModel):
-    id: str
+    id: PyObjectId
     full_name: str
     student_code: str
     email: str

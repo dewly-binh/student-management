@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 
-from pydantic import BaseModel, EmailStr, Field, model_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from student_management.models.student import GenderEnum
 
@@ -32,6 +32,28 @@ class StudentUpdateRequest(BaseModel):
     gender: GenderEnum | None = None
     phone: str | None = Field(default=None, pattern=r"^(0|\+84)[3|5|7|8|9]\d{8}$")
     address: str | None = None
+
+    @field_validator("date_of_birth")
+    @classmethod
+    def validate_date_of_birth(cls, v):
+        if v is None:
+            return v
+
+        if isinstance(v, datetime):
+            v = v.date()
+
+        today = date.today()
+        if v > today:
+            raise ValueError("Ngày sinh không hợp lệ")
+
+        age = today.year - v.year
+        if (today.month, today.day) < (v.month, v.day):
+            age -= 1
+
+        if age < 18:
+            raise ValueError("Phải đủ 18 tuổi")
+
+        return v
 
 
 class StudentChangePasswordRequest(BaseModel):

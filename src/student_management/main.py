@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from student_management.api.v1.api import router
 from student_management.db.mongo import close_db, open_db
 
 
@@ -15,3 +16,5 @@ async def life_span(app: FastAPI):
 
 
 app = FastAPI(lifespan=life_span)
+
+app.include_router(router)

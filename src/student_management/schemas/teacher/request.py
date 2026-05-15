@@ -23,7 +23,7 @@ class TeacherCreateRequest(BaseModel):
 class TeacherUpdateRequest(BaseModel):
     full_name: str | None = None
     department: str | None = None
-    phone: str | None = None
+    phone: str | None = Field(default=None, pattern=r"^(0|\+84)[3|5|7|8|9]\d{8}$")
 
 
 class TeacherChangePasswordRequest(BaseModel):

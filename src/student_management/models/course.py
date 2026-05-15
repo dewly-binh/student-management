@@ -1,13 +1,11 @@
 from enum import Enum
-from typing import TYPE_CHECKING
 
 import pymongo
 from beanie import Document, Link
 from pydantic import Field
 from pymongo import IndexModel
 
-if TYPE_CHECKING:
-    from .teacher import Teacher
+from .teacher import Teacher
 
 
 class CourseStatusEnum(str, Enum):
